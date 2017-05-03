@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
     private TextView mQuestionTextView;
+    private TextView mQuizProgress;
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_india, true),
@@ -55,7 +56,10 @@ public class QuizActivity extends AppCompatActivity {
         mPrevButton = (ImageButton) findViewById(R.id.previous_button);
         mNextButton = (ImageButton) findViewById(R.id.next_button);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        mQuizProgress = (TextView) findViewById(R.id.quiz_progress_text_view);
+
         updateQuestion();
+        updateQuizProgress();
         activateButtons(clickable);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +86,7 @@ public class QuizActivity extends AppCompatActivity {
                 mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
                 mCurrentIndex = (mCurrentIndex >= 0) ? mCurrentIndex : mCurrentIndex + mQuestionBank.length;
                 updateQuestion();
+                updateQuizProgress();
 
                 clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
                 activateButtons(clickable);
@@ -98,6 +103,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+                updateQuizProgress();
 
                 clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
                 activateButtons(clickable);
@@ -105,6 +111,7 @@ public class QuizActivity extends AppCompatActivity {
                 mPrevButton.setEnabled(true);
                 if(mCurrentIndex == (mQuestionBank.length - 1)) {
                     mNextButton.setEnabled(false);
+                    printScore();
                 }
             }
         });
@@ -114,6 +121,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+                updateQuizProgress();
 
                 clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
                 activateButtons(clickable);
@@ -121,6 +129,7 @@ public class QuizActivity extends AppCompatActivity {
                 mPrevButton.setEnabled(true);
                 if(mCurrentIndex == (mQuestionBank.length - 1)) {
                     mNextButton.setEnabled(false);
+                    printScore();
                 }
             }
         });
@@ -177,6 +186,11 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setText(question);
     }
 
+    private void updateQuizProgress()
+    {
+        mQuizProgress.setText(mCurrentIndex+1 + "/" + mQuestionBank.length);
+    }
+
     private void checkAnswer(boolean userPressedTrue)
     {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
@@ -190,8 +204,6 @@ public class QuizActivity extends AppCompatActivity {
             mScoreTracker.set(mCurrentIndex,0);
         }
 
-        Log.i(TAG, mScoreTracker.toString());
-
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
@@ -199,5 +211,18 @@ public class QuizActivity extends AppCompatActivity {
     {
         mTrueButton.setEnabled(activate);
         mFalseButton.setEnabled(activate);
+    }
+
+    private void printScore()
+    {
+        int score = 0;
+        for (Integer i : mScoreTracker) {
+            if (i > 0) {
+                score += i;
+            }
+        }
+
+        float finalScore = (float) ((score > 0) ? (score * 100.0f) / mScoreTracker.size() : 0);
+        Toast.makeText(QuizActivity.this, "Score: " + finalScore + "%", Toast.LENGTH_LONG).show();
     }
 }
