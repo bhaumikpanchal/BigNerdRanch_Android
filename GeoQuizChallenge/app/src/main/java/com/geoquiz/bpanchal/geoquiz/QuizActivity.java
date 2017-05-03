@@ -9,10 +9,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CLICKABLE = "clickable";
+    private static final String KEY_SCORE = "score";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -29,61 +34,94 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true)
     };
 
+    private ArrayList<Integer> mScoreTracker = new ArrayList<Integer>(Collections.nCopies(6, -1));
+    private boolean clickable = true;
     private int mCurrentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreated(Bundle) called");
+        Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
 
         if(savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
+            clickable = savedInstanceState.getBoolean(KEY_CLICKABLE);
+            mScoreTracker = savedInstanceState.getIntegerArrayList(KEY_SCORE);
         }
 
+        mTrueButton = (Button) findViewById(R.id.true_button);
+        mFalseButton = (Button) findViewById(R.id.false_button);
+        mPrevButton = (ImageButton) findViewById(R.id.previous_button);
+        mNextButton = (ImageButton) findViewById(R.id.next_button);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         updateQuestion();
-        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                updateQuestion();
-            }
-        });
+        activateButtons(clickable);
 
-
-        mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkAnswer(true);
+                clickable = false;
+                activateButtons(clickable);
             }
         });
 
-        mFalseButton = (Button) findViewById(R.id.false_button);
         mFalseButton.setOnClickListener(new View.OnClickListener() {
-            @Override   
+            @Override
             public void onClick(View v) {
                 checkAnswer(false);
+                clickable = false;
+                activateButtons(clickable);
             }
         });
 
-        mPrevButton = (ImageButton) findViewById(R.id.previous_button);
         mPrevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
                 mCurrentIndex = (mCurrentIndex >= 0) ? mCurrentIndex : mCurrentIndex + mQuestionBank.length;
                 updateQuestion();
+
+                clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
+                activateButtons(clickable);
+
+                mNextButton.setEnabled(true);
+                if(mCurrentIndex == 0) {
+                    mPrevButton.setEnabled(false);
+                }
             }
         });
 
-        mNextButton = (ImageButton) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+
+                clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
+                activateButtons(clickable);
+
+                mPrevButton.setEnabled(true);
+                if(mCurrentIndex == (mQuestionBank.length - 1)) {
+                    mNextButton.setEnabled(false);
+                }
+            }
+        });
+
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                updateQuestion();
+
+                clickable = (mScoreTracker.get(mCurrentIndex) != -1) ? false : true;
+                activateButtons(clickable);
+
+                mPrevButton.setEnabled(true);
+                if(mCurrentIndex == (mQuestionBank.length - 1)) {
+                    mNextButton.setEnabled(false);
+                }
             }
         });
     }
@@ -129,6 +167,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_CLICKABLE, clickable);
+        savedInstanceState.putIntegerArrayList(KEY_SCORE, mScoreTracker);
     }
 
     private void updateQuestion()
@@ -140,11 +180,24 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue)
     {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        int messageResId = 0;
 
-        int messageResId = (userPressedTrue == answerIsTrue) ?
-                            R.string.correct_toast :
-                            R.string.incorrect_toast;
+        if (userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_toast;
+            mScoreTracker.set(mCurrentIndex,1);
+        } else {
+            messageResId = R.string.incorrect_toast;
+            mScoreTracker.set(mCurrentIndex,0);
+        }
+
+        Log.i(TAG, mScoreTracker.toString());
 
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void activateButtons(boolean activate)
+    {
+        mTrueButton.setEnabled(activate);
+        mFalseButton.setEnabled(activate);
     }
 }
