@@ -68,6 +68,10 @@ public class QuizActivity extends AppCompatActivity {
                 checkAnswer(true);
                 clickable = false;
                 activateButtons(clickable);
+
+                if(mCurrentIndex == (mQuestionBank.length - 1)) {
+                    printScore();
+                }
             }
         });
 
@@ -77,6 +81,10 @@ public class QuizActivity extends AppCompatActivity {
                 checkAnswer(false);
                 clickable = false;
                 activateButtons(clickable);
+
+                if(mCurrentIndex == (mQuestionBank.length - 1)) {
+                    printScore();
+                }
             }
         });
 
@@ -111,7 +119,6 @@ public class QuizActivity extends AppCompatActivity {
                 mPrevButton.setEnabled(true);
                 if(mCurrentIndex == (mQuestionBank.length - 1)) {
                     mNextButton.setEnabled(false);
-                    printScore();
                 }
             }
         });
@@ -129,7 +136,6 @@ public class QuizActivity extends AppCompatActivity {
                 mPrevButton.setEnabled(true);
                 if(mCurrentIndex == (mQuestionBank.length - 1)) {
                     mNextButton.setEnabled(false);
-                    printScore();
                 }
             }
         });
