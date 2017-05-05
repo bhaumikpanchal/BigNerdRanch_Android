@@ -20,6 +20,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String KEY_CLICKABLE = "clickable";
     private static final String KEY_SCORE = "score";
+    private static final String KEY_IS_CHEATER = "isCheater";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Button mTrueButton;
@@ -42,7 +43,7 @@ public class QuizActivity extends AppCompatActivity {
     private ArrayList<Integer> mScoreTracker = new ArrayList<Integer>(Collections.nCopies(6, -1));
     private boolean clickable = true;
     private int mCurrentIndex = 0;
-    private boolean mIsCheater;
+    private boolean mIsCheater = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,10 @@ public class QuizActivity extends AppCompatActivity {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
             clickable = savedInstanceState.getBoolean(KEY_CLICKABLE);
             mScoreTracker = savedInstanceState.getIntegerArrayList(KEY_SCORE);
+            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER);
         }
+
+        Log.i(TAG, "mIsCheater: "+ mIsCheater);
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
@@ -216,6 +220,7 @@ public class QuizActivity extends AppCompatActivity {
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         savedInstanceState.putBoolean(KEY_CLICKABLE, clickable);
         savedInstanceState.putIntegerArrayList(KEY_SCORE, mScoreTracker);
+        savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);
     }
 
     private void updateQuestion()
