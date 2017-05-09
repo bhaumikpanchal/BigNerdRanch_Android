@@ -1,7 +1,6 @@
-#BigNerdRanch Android Programming
+# BigNerdRanch Android Programming
 
 This repo is a collection of all the android apps mentioned in the book, Android Programming: The Big Nerd Ranch Guide.
-
 
 Book:  
 [Android Programming: The Big Nerd Ranch Guide (3rd Edition)](https://www.bignerdranch.com/books/android-programming/)  
@@ -9,7 +8,7 @@ Bill Phillips, Chris Stewart, and Kristin Marsicano
 
 This is probably the best book out there for learning android programming. As a beginning Android programmer, my goal is to create a repo that contains code examples while following the chapters in the book including my own code implementation of the programming challenges mentioned at the end of almost all the chapters. 
 
-####Repository Structure:
+#### Repository Structure:
 As I worked through the book, I created eight Android apps. I have organized this repo into a directory containing all these 8 Android apps. Each app has a corresponding "challenge" app which has my own code implementations of the challenges mentioned at the end of most chapters. 
 
 * '*master*' is the main branch that has the latest and greatest code merged from every '*chapter*' and '*challenge*' branch created.
@@ -17,7 +16,7 @@ As I worked through the book, I created eight Android apps. I have organized thi
 
 ## Apps
 
-####Geoquiz
+#### Geoquiz
 The first app where we explore the fundamentals of Android projects, activities, layout, and explicit intents.
 
  
