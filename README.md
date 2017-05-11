@@ -21,7 +21,7 @@ As I worked through the book, I created eight Android apps, which is the ***main
 
 ## Apps
 
-#### Geoquiz
+### Geoquiz
 
 [main app](https://github.com/bhaumikpanchal/BigNerdRanch_Android/tree/master/GeoQuiz)         | [challenge app](https://github.com/bhaumikpanchal/BigNerdRanch_Android/tree/master/GeoQuizChallenge) |
 ----------------------|--------------------|  
