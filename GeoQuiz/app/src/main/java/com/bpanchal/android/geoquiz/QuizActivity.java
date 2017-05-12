@@ -1,4 +1,4 @@
-package com.geoquiz.bpanchal.geoquiz;
+package com.bpanchal.android.geoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
