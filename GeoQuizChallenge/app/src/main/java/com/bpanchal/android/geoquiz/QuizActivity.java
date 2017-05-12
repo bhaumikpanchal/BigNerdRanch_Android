@@ -1,4 +1,4 @@
-package com.geoquiz.bpanchal.geoquiz;
+package com.bpanchal.android.geoquiz;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
