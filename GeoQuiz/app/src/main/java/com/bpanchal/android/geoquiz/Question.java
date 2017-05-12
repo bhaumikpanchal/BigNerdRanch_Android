@@ -1,4 +1,4 @@
-package com.geoquiz.bpanchal.geoquiz;
+package com.bpanchal.android.geoquiz;
 
 public class Question
 {
